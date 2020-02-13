@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/codenation-dev/squad-6-ad-nodejs-kroton-1/issues"
   },
-  "homepage": "https://github.com/codenation-dev/squad-6-ad-nodejs-kroton-1#readme"
+  "homepage": "https://github.com/codenation-dev/squad-6-ad-nodejs-kroton-1#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
