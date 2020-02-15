@@ -4,6 +4,7 @@
   "description": "This repository will have the code of our final project from AceleraDev Nodejs - Kroton.",
   "main": "index.js",
   "scripts": {
+    "start": "node src/app/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -15,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/codenation-dev/squad-6-ad-nodejs-kroton-1/issues"
   },
-  "homepage": "https://github.com/codenation-dev/squad-6-ad-nodejs-kroton-1#readme"
+  "homepage": "https://github.com/codenation-dev/squad-6-ad-nodejs-kroton-1#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
