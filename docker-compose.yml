@@ -1,0 +1,15 @@
+version: '3.1'
+
+services:
+  database:
+    image: postgres
+    container_name: log_api_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - /usr/postgres/data
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: 123456789
+      POSTGRES_DB: log_api
+      PGDATA: /usr/postgres/data/
