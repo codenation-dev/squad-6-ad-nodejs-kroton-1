@@ -11,6 +11,7 @@ class Log extends Model {
         level: Sequelize.ENUM('info', 'debug', 'warning', 'error', 'critical error'),
         environment: Sequelize.STRING,
         source: Sequelize.STRING,
+        timestamp: Sequelize.DATE
       },
       {
         sequelize,

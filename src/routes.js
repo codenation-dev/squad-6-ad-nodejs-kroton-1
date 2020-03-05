@@ -16,7 +16,7 @@ routes.use(authMiddleware);
 
 routes.put('/users', UserController.update);
 
-routes.get('/logs', LogController.searchError);
+routes.get('/logs', LogController.searchLog);
 
 routes.post('/logs', LogController.remove);
 
