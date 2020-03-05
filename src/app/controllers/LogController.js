@@ -1,6 +1,6 @@
 // TODO implementar as funcionalidades de cada endpoint aqui. Criar o Model para fazer as consultas no banco.
 
-class ErrorController {
+class LogController {
   async searchError(req, res) {
     return res.json({ message: 'Search error' });
   }
@@ -14,4 +14,4 @@ class ErrorController {
   }
 }
 
-export default new ErrorController();
+export default new LogController();
