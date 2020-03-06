@@ -10,21 +10,32 @@ class LogController {
     const queryField = req.query.queryBy
     const queryValue = req.query.queryValue
 
-    const limit = req.query.limit || 20
+    const limit = req.query.limit || 100
     const offset = req.query.offset || 0
 
     const options = {}
+    const countOptions = {}
 
     if (environment) {
       options['where'] = { environment }
+      countOptions['where'] = { environment }
     }
 
     if (sortBy) {
       options['order'] = [sortBy, sortOrder]
+      countOptions['order'] = [sortBy, sortOrder]
     }
 
     if (queryField) {
       options['where'] = {
+        ...options['where'],
+
+        queryField: {
+          [Op.like]: `%${queryValue}%`
+        }
+      }
+
+      countOptions['where'] = {
         ...options['where'],
 
         queryField: {
@@ -37,6 +48,8 @@ class LogController {
     options['offset'] = offset
 
     const result = await Log.findAll(options)
+    const total = await Log.findAll(countOptions)
+
 
     return res.json(result);
   }
