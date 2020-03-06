@@ -4,6 +4,28 @@ import { Op } from 'sequelize'
 class LogController {
 
   async searchLog(req, res) {
+    const { options, countOptions } = this.buildSearch(req)
+
+    const results = await Log.findAll(options)
+    const total = (await Log.findAll(countOptions)).length
+
+    const limit = options['limit']
+    const offset = options['offset']
+    
+    const meta = this.buildMeta(req, limit, offset, total)
+
+    return res.status(200).json({ meta, results });
+  }
+
+  async remove(req, res) {
+    return res.json({ message: 'remoce error' });
+  }
+
+  async toArchive(req, res) {
+    return res.json({ message: 'archieve error' });
+  }
+
+  buildSearch(req) {
     const environment = req.query.env
     const sortBy = req.query.sortBy
     const sortOrder = req.query.sortOrder || 'DESC'
@@ -47,20 +69,34 @@ class LogController {
     options['limit'] = limit
     options['offset'] = offset
 
-    const result = await Log.findAll(options)
-    const total = await Log.findAll(countOptions)
-
-
-    return res.json(result);
+    return { options, countOptions }
   }
 
-  async remove(req, res) {
-    return res.json({ message: 'remoce error' });
+  buildMeta(req, limit, offset, total) {
+    const host = req.headers['host']
+    const base = req.originalUrl.split('?')[0]
+    const query = req.query
+
+    const toIgnore = ['limit', 'offset'];
+
+    const queries = Object.keys(query)
+      .filter(key => !toIgnore.includes(key))
+      .reduce((obj, key) => {
+        obj.push(`${key}=${query[key]}`);
+        return obj;
+      }, []);
+
+    if ((limit + offset) <= total) {
+      meta['next'] = `${host}${base}?${queries.join('&')}&limit=${limit}&offset=${limit + offset}`
+    }
+    if (offset > 0 && (offset - limit) >= 0) {
+      meta['previous'] = `${host}${base}?${queries.join('&')}&limit=${limit}&offset=${offset - limit}`
+    }
+    meta['total'] = total
+
+    return meta
   }
 
-  async toArchive(req, res) {
-    return res.json({ message: 'archieve error' });
-  }
 }
 
 export default new LogController();
