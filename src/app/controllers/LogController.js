@@ -4,49 +4,85 @@ import { Op } from 'sequelize'
 class LogController {
 
   async searchLog(req, res) {
-    const { options, countOptions } = this.buildSearch(req)
+    try {
+      const { options, countOptions } = this.buildSearch(req)
 
-    const results = await Log.findAll(options)
-    const total = (await Log.findAll(countOptions)).length
+      const results = await Log.findAll(options)
+      const total = (await Log.findAll(countOptions)).length
 
-    const limit = options['limit']
-    const offset = options['offset']
+      const limit = options['limit']
+      const offset = options['offset']
 
-    const meta = this.buildMeta(req, limit, offset, total)
+      const meta = this.buildMeta(req, limit, offset, total)
 
-    return res.status(200).json({ meta, results });
+      return res.status(200).json({ meta, results })
+
+    } catch (error) {
+
+      return res.status(400).json({
+        message: 'Something went wrong',
+        stack: error
+      })
+    }
   }
 
   async remove(req, res) {
-    const id = req.params.id
+    try {
+      const id = req.params.id
 
-    const result = await Log.destroy({
-      where: {
-        id
+      if (id) {
+        const result = await Log.destroy({
+          where: {
+            id
+          }
+        })
+
+        if (result) {
+          res.status(204).json()
+        } else {
+          return res.status(400).json({ message: 'Cannot drop, object not found' })
+        }
+
+      } else {
+        return res.status(400).json({ message: 'Id cannot be null' })
       }
-    })
-    if (result) {
-      res.status(204).json()
-    } else {
-      return res.status(400).json({ message: 'Cannot drop, object not found' })
+      
+    } catch (error) {
+      return res.status(400).json({
+        message: 'Something went wrong',
+        stack: error
+      })
     }
   }
 
   async toArchive(req, res) {
-    const id = req.params.id
+    try {
+      const id = req.params.id
 
-    const result = await Log.update({ toArchive: true }, {
-      where: {
-        id
+      if (id) {
+        const result = await Log.update({ toArchive: true }, {
+          where: {
+            id
+          }
+        })
+
+        if (result) {
+          return res.status(200).json({ message: 'Archived successfully' })
+        } else {
+          return res.status(400).json({ message: 'Cannot drop, object not found' })
+        }
+
+      } else {
+        return res.status(400).json({ message: 'Id cannot be null' })
       }
-    })
 
-    if (result) {
-      return res.status(200).json({ message: 'Archived successfully' })
-    } else {
-      return res.status(400).json({ message: 'Cannot drop, object not found' })
+    } catch (error) {
+      return res.status(400).json({
+        message: 'Something went wrong',
+        stack: error
+      })
     }
-    
+
   }
 
   buildSearch(req) {
