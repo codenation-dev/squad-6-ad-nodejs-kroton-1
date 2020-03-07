@@ -11,18 +11,42 @@ class LogController {
 
     const limit = options['limit']
     const offset = options['offset']
-    
+
     const meta = this.buildMeta(req, limit, offset, total)
 
     return res.status(200).json({ meta, results });
   }
 
   async remove(req, res) {
-    return res.json({ message: 'remoce error' });
+    const id = req.params.id
+
+    const result = await Log.destroy({
+      where: {
+        id
+      }
+    })
+    if (result) {
+      res.status(204).json()
+    } else {
+      return res.status(400).json({ message: 'Cannot drop, object not found' })
+    }
   }
 
   async toArchive(req, res) {
-    return res.json({ message: 'archieve error' });
+    const id = req.params.id
+
+    const result = await Log.update({ toArchive: true }, {
+      where: {
+        id
+      }
+    })
+
+    if (result) {
+      return res.status(200).json({ message: 'Archived successfully' })
+    } else {
+      return res.status(400).json({ message: 'Cannot drop, object not found' })
+    }
+    
   }
 
   buildSearch(req) {

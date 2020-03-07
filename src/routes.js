@@ -18,8 +18,8 @@ routes.put('/users', UserController.update);
 
 routes.get('/logs', LogController.searchLog);
 
-routes.post('/logs', LogController.remove);
+routes.delete('/logs', LogController.remove);
 
-routes.post('/logs', LogController.toArchive);
+routes.put('/logs', LogController.toArchive);
 
 export default routes;
