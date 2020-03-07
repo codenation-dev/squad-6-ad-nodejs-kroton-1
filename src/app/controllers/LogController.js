@@ -3,6 +3,30 @@ import { Op } from 'sequelize'
 
 class LogController {
 
+  async getLogById(req, res) {
+    try {
+      const id = req.params.id
+
+      if (id) {
+        const result = await Log.findByPk(id)
+
+        if (result) {
+          res.send(200).json(result)
+        } else {
+          res.send(400).json({ message: 'Cannot find with id especified' })
+        }
+
+      } else {
+        res.status(400).json({ message: 'Id cannot be null' })
+      }
+    } catch (error) {
+      res.status(400).json({
+        message: 'Something went wrong',
+        stack: error
+      })
+    }
+  }
+
   async searchLog(req, res) {
     try {
       const { options, countOptions } = this.buildSearch(req)
@@ -15,11 +39,10 @@ class LogController {
 
       const meta = this.buildMeta(req, limit, offset, total)
 
-      return res.status(200).json({ meta, results })
+      res.status(200).json({ meta, results })
 
     } catch (error) {
-
-      return res.status(400).json({
+      res.status(400).json({
         message: 'Something went wrong',
         stack: error
       })
@@ -40,15 +63,15 @@ class LogController {
         if (result) {
           res.status(204).json()
         } else {
-          return res.status(400).json({ message: 'Cannot drop, object not found' })
+          res.status(400).json({ message: 'Cannot drop, object not found' })
         }
 
       } else {
-        return res.status(400).json({ message: 'Id cannot be null' })
+        res.status(400).json({ message: 'Id cannot be null' })
       }
-      
+
     } catch (error) {
-      return res.status(400).json({
+      res.status(400).json({
         message: 'Something went wrong',
         stack: error
       })
@@ -67,17 +90,17 @@ class LogController {
         })
 
         if (result) {
-          return res.status(200).json({ message: 'Archived successfully' })
+          res.status(200).json({ message: 'Archived successfully' })
         } else {
-          return res.status(400).json({ message: 'Cannot drop, object not found' })
+          res.status(400).json({ message: 'Cannot drop, object not found' })
         }
 
       } else {
-        return res.status(400).json({ message: 'Id cannot be null' })
+        res.status(400).json({ message: 'Id cannot be null' })
       }
 
     } catch (error) {
-      return res.status(400).json({
+      res.status(400).json({
         message: 'Something went wrong',
         stack: error
       })
