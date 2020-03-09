@@ -1,4 +1,4 @@
-import Log from '../models/User'
+import Log from '../models/Log'
 import { Op } from 'sequelize'
 
 class LogController {
@@ -29,15 +29,16 @@ class LogController {
 
   async searchLog(req, res) {
     try {
-      const { options, countOptions } = this.buildSearch(req)
-
+      const { options, countOptions } = await buildSearch(req)
+      console.log({options});
+      
       const results = await Log.findAll(options)
       const total = (await Log.findAll(countOptions)).length
 
       const limit = options['limit']
       const offset = options['offset']
 
-      const meta = this.buildMeta(req, limit, offset, total)
+      const meta = await buildMeta(req, +limit, +offset, total)
 
       res.status(200).json({ meta, results })
 
@@ -105,81 +106,93 @@ class LogController {
         stack: error
       })
     }
+  }
+}
 
+const buildSearch = async (req) => {
+
+  const environment = req.query.env
+  const sortBy = req.query.sortBy
+  const sortOrder = req.query.sortOrder || 'DESC'
+  const queryField = req.query.queryBy
+  const queryValue = req.query.queryValue
+
+  const limit = req.query.limit || 100
+  const offset = req.query.offset || 0
+
+  const options = {}
+  const countOptions = {}
+
+
+  if (environment) {
+    options['where'] = { environment }
+    countOptions['where'] = { environment }
   }
 
-  buildSearch(req) {
-    const environment = req.query.env
-    const sortBy = req.query.sortBy
-    const sortOrder = req.query.sortOrder || 'DESC'
-    const queryField = req.query.queryBy
-    const queryValue = req.query.queryValue
+  if (sortBy) {
+    options['order'] = [[sortBy, sortOrder]]
+    countOptions['order'] = [[sortBy, sortOrder]]
+  }
 
-    const limit = req.query.limit || 100
-    const offset = req.query.offset || 0
+  if (queryField) {
+    options['where'] = {
+      ...options['where'],
 
-    const options = {}
-    const countOptions = {}
-
-    if (environment) {
-      options['where'] = { environment }
-      countOptions['where'] = { environment }
-    }
-
-    if (sortBy) {
-      options['order'] = [sortBy, sortOrder]
-      countOptions['order'] = [sortBy, sortOrder]
-    }
-
-    if (queryField) {
-      options['where'] = {
-        ...options['where'],
-
-        queryField: {
-          [Op.like]: `%${queryValue}%`
-        }
-      }
-
-      countOptions['where'] = {
-        ...options['where'],
-
-        queryField: {
-          [Op.like]: `%${queryValue}%`
-        }
+      [queryField]: {
+        [Op.like]: `%${queryValue}%`
       }
     }
 
-    options['limit'] = limit
-    options['offset'] = offset
+    countOptions['where'] = {
+      ...options['where'],
 
-    return { options, countOptions }
+      [queryField]: {
+        [Op.like]: `%${queryValue}%`
+      }
+    }
   }
 
-  buildMeta(req, limit, offset, total) {
-    const host = req.headers['host']
-    const base = req.originalUrl.split('?')[0]
-    const query = req.query
+  options['limit'] = limit
+  options['offset'] = offset
 
-    const toIgnore = ['limit', 'offset'];
+  return { options, countOptions }
 
-    const queries = Object.keys(query)
-      .filter(key => !toIgnore.includes(key))
-      .reduce((obj, key) => {
-        obj.push(`${key}=${query[key]}`);
-        return obj;
-      }, []);
+}
 
-    if ((limit + offset) <= total) {
+const buildMeta = async (req, limit, offset, total) => {
+  const host = req.headers['host']
+  const base = req.originalUrl.split('?')[0]
+  const query = req.query
+
+  const toIgnore = ['limit', 'offset'];
+
+  const queries = Object.keys(query)
+    .filter(key => !toIgnore.includes(key))
+    .reduce((obj, key) => {
+      obj.push(`${key}=${query[key]}`);
+      return obj;
+    }, []);
+
+  const meta = {}
+
+  if ((limit + offset) < total) {
+    if (queries.length) {
       meta['next'] = `${host}${base}?${queries.join('&')}&limit=${limit}&offset=${limit + offset}`
+    } else {
+      meta['next'] = `${host}${base}?limit=${limit}&offset=${limit + offset}`
     }
-    if (offset > 0 && (offset - limit) >= 0) {
-      meta['previous'] = `${host}${base}?${queries.join('&')}&limit=${limit}&offset=${offset - limit}`
-    }
-    meta['total'] = total
-
-    return meta
   }
 
+  if (offset > 0 && (offset - limit) > 0) {
+    if (queries.length) {
+      meta['previous'] = `${host}${base}?${queries.join('&')}&limit=${limit}&offset=${offset - limit}`
+    } else {
+      meta['previous'] = `${host}${base}?limit=${limit}&offset=${offset - limit}`
+    }
+  }
+  meta['total'] = total
+
+  return meta
 }
 
 export default new LogController();
