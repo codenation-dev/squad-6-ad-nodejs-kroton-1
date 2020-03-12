@@ -4,10 +4,23 @@ const request = supertest(app);
 const db = require('../src/database');
 const model = require('../models/User');
 
+const login;
 
 beforeAll(async () => {
-  await db.sequelize.query('');
-  await db.sequelize.sync();
+  await request()
+    .post('/users')
+    .send({
+      "name": "Vinicius",
+      "email": "vinicius@codenation.com.br",
+      "password": "1234567"
+    })
+
+  login = await request()
+    .post('/login')
+    .send({
+      "email": "vinicius@codenation.com.br",
+      "password": "1234567"
+    })    
 });
 
 afterAll(async () => {
@@ -26,7 +39,9 @@ describe('The API on /users Endpoint at POST method should...',  () => {
   });
 
   afterEach(async () => {
-    await db.sequelize.query('TRUNCATE TABLE users;')
+    await UserModel.destroy({
+      where: { email: 'viniciussricci@hotmail.com' }  
+    });
   });
 
   it(`Return 400 as status code and error message if the users already exist`, async () => {
@@ -74,9 +89,8 @@ describe('The API on /users Endpoint at POST method should...',  () => {
   });
 });
 
-describe('The API on /users')
-
-describe('The API on /users/UserID EndPoint at PUT method shloud...', () => {
+describe('The API on /users/UserID Endpoint at GET method should...', () => {
+  const user;
 
   beforeEach(async () => {
     await UserModel.create({
@@ -84,17 +98,63 @@ describe('The API on /users/UserID EndPoint at PUT method shloud...', () => {
       "email": "viniciussricci@hotmail.com",
       "password": "123456"
     }); 
+
+    user = UserModel.findOne({
+      where: { email: 'viniciussricci@hotmail.com' }
+    })
   });
 
   afterEach(async () => {
-    await db.sequelize.query('TRUNCATE TABLE users;')
+    await UserModel.destroy({
+      where: { email: 'viniciussricci@hotmail.com'}
+    })
+  }); 
+
+  it(`Return 200 as status code with the user data`, async () => {
+    expect.assertions(2)
+
+    const res = await request()
+      .get(`/users/${user.id}`)
+      .set('authorization', login.token)
+  
+    expect(res.statusCode).toEqual(200);
+    expect(res.body).toMatchObject({
+      "name": "Vinicius Ricci",
+      "email": "viniciussricci@hotmail.com",
+      "password": "123456"
+    }); 
+  });
+
+  done();
+});
+
+describe('The API on /users/UserID EndPoint at PUT method should...', () => {
+  const user;
+
+  beforeEach(async () => {
+    await UserModel.create({
+      "name": "Vinicius Ricci",
+      "email": "viniciussricci@hotmail.com",
+      "password": "123456"
+    }); 
+
+    user = UserModel.findOne({
+      where: { email: 'viniciussricci@hotmail.com' }
+    })
+  });
+
+  afterEach(async () => {
+    await UserModel.destroy({
+      where: { email: 'viniciussricci@hotmail.com'}
+    })
   });  
 
   it(`Return 200 as status code with sucess message and a validation of the update in database`, async () => {
     expect.assertions(3);
 
     const res = await request()
-      .put('/users/1')
+      .put(`/users/${user.id}`)
+      .set('authorization', login.token)
       .send({
         "name": "Vinicius Scudeler Ricci",
         "email": "viniciussricci@hotmail.com",
@@ -119,7 +179,8 @@ describe('The API on /users/UserID EndPoint at PUT method shloud...', () => {
     expect.assertions(2);
 
     const res = await request()
-      .put('/users/2')
+      .put('/users/15')
+      .set('Authorization', login.token)
       .send({
         "name": "Vinicius Scudeler Ricci",
         "email": "viniciussricci@hotmail.com",
@@ -133,14 +194,46 @@ describe('The API on /users/UserID EndPoint at PUT method shloud...', () => {
 
     done(); 
   });
-
-  // it('the fetch fails with an error', () => {
-  //   expect.assertions(1);
-  //   return fetchData().catch(e => expect(e).toMatch('error'));
-  // });
 });
 
-describe('The API on /login EndPoint at GET method shloud...', () => {
+describe('The API on /users/UserID Endpoint at DELETE method should...', () => {
+  const user;
+
+  beforeEach(async () => {
+    await UserModel.create({
+      "name": "Vinicius Ricci",
+      "email": "viniciussricci@hotmail.com",
+      "password": "123456"
+    }); 
+
+    user = UserModel.findOne({
+      where: { email: 'viniciussricci@hotmail.com' }
+    })
+  });
+
+  afterEach(async () => {
+    await UserModel.destroy({
+      where: { email: 'viniciussricci@hotmail.com'}
+    })
+  }); 
+
+  it(`Return 200 as status code with the success message`, async () => {
+    expect.assertions(2)
+
+    const res = await request()
+      .delete(`/users/${user.id}`)
+      .set('authorization', login.token)
+  
+    expect(res.statusCode).toEqual(200);
+    expect(res.body).toMatchObject({
+      message: 'User deleted sucessfully'
+    }); 
+  });
+
+  done();
+});
+
+describe('The API on /login EndPoint at POST method shloud...', () => {
   
   beforeEach(async () => {
     await UserModel.create({
@@ -151,7 +244,9 @@ describe('The API on /login EndPoint at GET method shloud...', () => {
   });
 
   afterEach(async () => {
-    await db.sequelize.query('TRUNCATE TABLE users;')
+    await UserModel.destroy({
+      where: { email: 'viniciussricci@hotmail.com' }  
+    });
   });  
 
   it(`Return 200 as status code and a sucessfull login message`, async () => {
