@@ -195,4 +195,4 @@ const buildMeta = async (req, limit, offset, total) => {
   return meta
 }
 
-export default new LogController();
+export default new LogController()

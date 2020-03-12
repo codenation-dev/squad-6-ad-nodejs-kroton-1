@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon src/server.js",
     "dev:debug": "nodemon --inpect src/server.js",
-    "sync" : "nodemon src/app/syncDB.js"
+    "sync": "nodemon src/app/syncDB.js"
   },
   "repository": {
     "type": "git",

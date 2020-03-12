@@ -20,8 +20,8 @@ routes.get('/logs', LogController.searchLog);
 
 routes.get('/logs/:id', LogController.getLogById);
 
-routes.delete('/logs', LogController.remove);
+routes.delete('/logs/:id', LogController.remove);
 
-routes.put('/logs', LogController.toArchive);
+routes.put('/logs/:id', LogController.toArchive);
 
 export default routes;
