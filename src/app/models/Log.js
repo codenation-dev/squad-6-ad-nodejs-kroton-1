@@ -8,9 +8,20 @@ class Log extends Model {
         message: Sequelize.STRING,
         user_token: Sequelize.STRING,
         events_number: Sequelize.INTEGER,
-        level: Sequelize.ENUM('info', 'debug', 'warning', 'error', 'critical error'),
-        environment: Sequelize.STRING,
+        level: Sequelize.ENUM(
+          'info',
+          'debug',
+          'warning',
+          'error',
+          'critical error'
+        ),
+        environment: Sequelize.ENUM('producao', 'homologacao', 'dev'),
         source: Sequelize.STRING,
+        timestamp: Sequelize.DATE,
+        toArchive: {
+          type: Sequelize.BOOLEAN,
+          defaultValue: false,
+        },
       },
       {
         sequelize,
