@@ -1,4 +1,3 @@
-import connection from '../database/index'
+import connection from '../database/index';
 
-connection.sync()
-    .then(() => process.exit(0))
+connection.sync().then(() => process.exit(0));
