@@ -2,7 +2,7 @@ import { Router } from 'express';
 
 import UserController from './app/controllers/UserController';
 import SessionController from './app/controllers/SessionController';
-import ErrorController from './app/controllers/ErrorController';
+import LogController from './app/controllers/LogController';
 
 import authMiddleware from './app/middlewares/auth';
 
@@ -16,10 +16,12 @@ routes.use(authMiddleware);
 
 routes.put('/users', UserController.update);
 
-routes.get('/errors', ErrorController.searchError);
+routes.get('/logs', LogController.searchLog);
 
-routes.post('/errors', ErrorController.remove);
+routes.get('/logs/:id', LogController.getLogById);
 
-routes.post('/errors', ErrorController.toArchive);
+routes.delete('/logs/:id', LogController.remove);
+
+routes.put('/logs/:id', LogController.toArchive);
 
 export default routes;
