@@ -92,6 +92,8 @@ class LogController {
   async saveLog(req, res) {
     try {
       const log = req.body;
+      const token = req.headers.authorization.split(' ')[1];
+      log.user_token = token;
 
       const result = await Log.create(log);
 
