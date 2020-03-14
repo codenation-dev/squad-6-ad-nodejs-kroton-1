@@ -16,6 +16,8 @@ routes.use(authMiddleware);
 
 routes.put('/users', UserController.update);
 
+routes.post('/logs', LogController.saveLog);
+
 routes.get('/logs', LogController.searchLog);
 
 routes.get('/logs/:id', LogController.getLogById);
