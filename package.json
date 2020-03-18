@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "nodemon src/server.js",
     "dev:debug": "nodemon --inpect src/server.js",
-    "sync": "nodemon src/app/syncDB.js"
+    "sync": "nodemon src/app/syncDB.js",
+    "test": "nodemon jest"
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,7 @@
     "jsonwebtoken": "^8.5.1",
     "pg": "^7.18.1",
     "sequelize": "^5.21.4",
+    "supertest": "^4.0.2",
     "yup": "^0.28.1"
   },
   "devDependencies": {
