@@ -123,9 +123,24 @@ describe('The API on /users/UserID Endpoint at GET method should...', () => {
       "email": "viniciussricci@hotmail.com",
       "password": "123456"
     }); 
+  
+    done();
   });
 
-  done();
+  it(`Return 505 as status code...`, async () => {
+    expect.assertions(2)
+
+    const res = await request()
+      .get('/users/65')
+      .set('authorization', login.token)
+
+    expect(res.statusCode).toEqual();
+    expect(res.body).toMatchObject({
+
+    });
+    
+    done();
+  });
 });
 
 describe('The API on /users/UserID EndPoint at PUT method should...', () => {
@@ -227,10 +242,26 @@ describe('The API on /users/UserID Endpoint at DELETE method should...', () => {
     expect(res.statusCode).toEqual(200);
     expect(res.body).toMatchObject({
       message: 'User deleted sucessfully'
-    }); 
+    });
+    
+    done();
   });
 
-  done();
+  it(`Return 505 as status code...`, async () => {
+    expect.assertions(2)
+
+    const res = await request()
+      .delete('/users/65')
+      .set('authorization', login.token)
+
+
+    expect(res.statusCode).toEqual();
+    expect(res.body).toMatchObject({
+
+    });
+    
+    done();
+  });
 });
 
 describe('The API on /login EndPoint at POST method shloud...', () => {
