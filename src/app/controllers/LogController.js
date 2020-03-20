@@ -99,7 +99,7 @@ class LogController {
         if (result) {
           res.send(200).json(result);
         } else {
-          res.send(400).json({ message: 'Cannot find with id especified' });
+          res.send(404).json({ message: 'Cannot find with id especified' });
         }
       } else {
         res.status(400).json({ message: 'Id cannot be null' });
@@ -147,7 +147,7 @@ class LogController {
         if (result) {
           res.status(204).json();
         } else {
-          res.status(400).json({ message: 'Cannot drop, object not found' });
+          res.status(404).json({ message: 'Cannot drop, object not found' });
         }
       } else {
         res.status(400).json({ message: 'Id cannot be null' });
@@ -177,7 +177,7 @@ class LogController {
         if (result) {
           res.status(200).json({ message: 'Archived successfully' });
         } else {
-          res.status(400).json({ message: 'Cannot drop, object not found' });
+          res.status(404).json({ message: 'Cannot archive, object not found' });
         }
       } else {
         res.status(400).json({ message: 'Id cannot be null' });
