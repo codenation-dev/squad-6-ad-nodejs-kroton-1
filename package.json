@@ -7,14 +7,10 @@
     "dev": "nodemon src/server.js",
     "dev:debug": "nodemon --inpect src/server.js",
     "sync": "nodemon src/app/syncDB.js",
-    "sync:test": "NODE_ENV=test nodemon src/app/syncDB.js",
+    "sync:dev": "DB=localhost nodemon src/app/syncDB.js",
+    "sync:test": "NODE_ENV=test DB=localhost nodemon src/app/syncDB.js",
     "test": "DB=localhost nodemon --exec jest",
     "test:coverage": "DB=localhost nodemon --exec jest --coverage"
-  },
-  "jest": {
-    "transform": {
-      ".(js|jsx|ts|tsx)": "@sucrase/jest-plugin"
-    }
   },
   "repository": {
     "type": "git",

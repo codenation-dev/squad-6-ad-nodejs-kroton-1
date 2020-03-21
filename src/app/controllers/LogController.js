@@ -25,25 +25,25 @@ const buildSearch = async req => {
   }
 
   if (queryField) {
-    options.where = {
-      ...options.where,
+    if (queryField !== 'level') {
+      const tmp = {
+        ...options.where,
 
-      [queryField]: {
-        [Op.like]: `%${queryValue}%`,
-      },
-    };
+        [queryField]: {
+          [Op.like]: `%${queryValue}%`,
+        },
+      };
 
-    countOptions.where = {
-      ...options.where,
-
-      [queryField]: {
-        [Op.like]: `%${queryValue}%`,
-      },
-    };
+      options.where = tmp;
+      countOptions.where = tmp;
+    } else {
+      options.where = { level: queryValue };
+      countOptions.where = { level: queryValue };
+    }
   }
 
-  options.offset = offset;
-  options.limit = limit;
+  options.offset = +offset;
+  options.limit = +limit;
 
   return { options, countOptions };
 };
@@ -74,7 +74,7 @@ const buildMeta = async (req, limit, offset, total) => {
     }
   }
 
-  if (offset > 0 && offset - limit > 0) {
+  if (offset > 0 && offset - limit >= 0) {
     if (queries.length) {
       meta.previous = `${host}${base}?${queries.join(
         '&'
@@ -100,17 +100,19 @@ class LogController {
       res.status(201).json(result);
     } catch (error) {
       if (error.name === 'SequelizeValidationError') {
-        const fields = error.errors.map(err => {
-          return {
-            message: err.message,
-            field: err.path,
-            wrongValue: err.value,
-            validation: err.validatorName,
-          };
-        });
-        res.status(400).json({ error: 'Validation Errors', fields });
+        const fields = await Promise.all(
+          error.errors.map(async err => {
+            return {
+              message: err.message,
+              field: err.path,
+              wrongValue: err.value,
+              validation: err.validatorName,
+            };
+          })
+        );
+        return res.status(400).json({ error: 'Validation Errors', fields });
       }
-      res.status(400).json(error);
+      return res.status(400).json(error);
     }
   }
 
@@ -118,16 +120,12 @@ class LogController {
     try {
       const { id } = req.params;
 
-      if (id) {
-        const result = await Log.findByPk(id);
+      const result = await Log.findByPk(id);
 
-        if (result) {
-          res.status(200).json(result);
-        } else {
-          res.status(404).json({ message: 'Cannot find with id especified' });
-        }
+      if (result) {
+        res.status(200).json(result);
       } else {
-        res.status(400).json({ message: 'Id cannot be null' });
+        res.status(404).json({ message: 'Cannot find with id especified' });
       }
     } catch (error) {
       res.status(400).json({
@@ -142,7 +140,7 @@ class LogController {
       const { options, countOptions } = await buildSearch(req);
 
       const results = await Log.findAll(options);
-      const total = (await Log.findAll(countOptions)).length;
+      const total = await Log.count(countOptions);
 
       const { limit } = options;
       const { offset } = options;
