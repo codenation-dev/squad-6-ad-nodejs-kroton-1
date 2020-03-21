@@ -8,7 +8,8 @@
     "dev:debug": "nodemon --inpect src/server.js",
     "sync": "nodemon src/app/syncDB.js",
     "sync:test": "NODE_ENV=test nodemon src/app/syncDB.js",
-    "test": "nodemon --exec jest --coverage"
+    "test": "DB=localhost nodemon --exec jest",
+    "test:coverage": "DB=localhost nodemon --exec jest --coverage"
   },
   "jest": {
     "transform": {

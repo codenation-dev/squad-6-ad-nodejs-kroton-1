@@ -173,7 +173,7 @@ describe('The API on /logs Endpoints at PUT method should...', () => {
     expect.assertions(2);
 
     const result = await request
-      .put('/logs/null')
+      .put('/logs/acbd')
       .set('Authorization', `Bearer ${login}`);
 
     expect(result.statusCode).toBe(400);
@@ -215,7 +215,7 @@ describe('The API on /logs Endpoints at DELETE method should...', () => {
     expect.assertions(2);
 
     const result = await request
-      .put('/logs/null')
+      .delete('/logs/abcd')
       .set('Authorization', `Bearer ${login}`);
 
     expect(result.statusCode).toBe(400);

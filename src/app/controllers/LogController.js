@@ -137,20 +137,16 @@ class LogController {
     try {
       const { id } = req.params;
 
-      if (id) {
-        const result = await Log.destroy({
-          where: {
-            id,
-          },
-        });
+      const result = await Log.destroy({
+        where: {
+          id,
+        },
+      });
 
-        if (result) {
-          res.status(204).json();
-        } else {
-          res.status(404).json({ message: 'Cannot drop, object not found' });
-        }
+      if (result) {
+        res.status(204).json();
       } else {
-        res.status(400).json({ message: 'Id cannot be null' });
+        res.status(404).json({ message: 'Cannot drop, object not found' });
       }
     } catch (error) {
       res.status(400).json({
@@ -164,23 +160,19 @@ class LogController {
     try {
       const { id } = req.params;
 
-      if (id) {
-        const result = await Log.update(
-          { toArchive: true },
-          {
-            where: {
-              id,
-            },
-          }
-        );
-
-        if (result[0]) {
-          res.status(200).json({ message: 'Archived successfully' });
-        } else {
-          res.status(404).json({ message: 'Cannot archive, object not found' });
+      const result = await Log.update(
+        { toArchive: true },
+        {
+          where: {
+            id,
+          },
         }
+      );
+
+      if (result[0]) {
+        res.status(200).json({ message: 'Archived successfully' });
       } else {
-        res.status(400).json({ message: 'Id cannot be null' });
+        res.status(404).json({ message: 'Cannot archive, object not found' });
       }
     } catch (error) {
       res.status(400).json({
