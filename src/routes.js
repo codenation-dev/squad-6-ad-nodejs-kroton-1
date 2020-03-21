@@ -19,6 +19,8 @@ routes.get('/users/:id', UserController.show);
 routes.put('/users/:id', UserController.update);
 routes.delete('/users/:id', UserController.delete);
 
+routes.post('/logs', LogController.saveLog);
+
 routes.get('/logs', LogController.searchLog);
 
 routes.get('/logs/:id', LogController.getLogById);
