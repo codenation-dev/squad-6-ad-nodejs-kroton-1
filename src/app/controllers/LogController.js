@@ -1,5 +1,5 @@
-import { Op } from 'sequelize';
-import Log from '../models/Log';
+const { Op } = require('sequelize');
+const Log = require('../models/Log');
 
 const buildSearch = async req => {
   const environment = req.query.env;
@@ -206,4 +206,4 @@ class LogController {
   }
 }
 
-export default new LogController();
+module.exports = new LogController();
