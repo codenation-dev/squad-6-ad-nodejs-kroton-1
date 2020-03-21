@@ -1,4 +1,5 @@
-import Sequelize, { Model } from 'sequelize';
+const Sequelize = require('sequelize');
+const { Model } = require('sequelize');
 
 class Log extends Model {
   static init(sequelize) {
@@ -84,4 +85,4 @@ class Log extends Model {
   }
 }
 
-export default Log;
+module.exports = Log;
