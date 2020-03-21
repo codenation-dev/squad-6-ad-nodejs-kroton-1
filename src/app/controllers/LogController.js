@@ -42,8 +42,8 @@ const buildSearch = async req => {
     };
   }
 
-  options.limit = limit;
   options.offset = offset;
+  options.limit = limit;
 
   return { options, countOptions };
 };

@@ -48,6 +48,36 @@ beforeEach(async () => {
     environment: 'dev',
     source: 'supertest',
   });
+
+  await Log.create({
+    title: 'Teste 3',
+    message: 'Log teste 3',
+    user_token: 'ghi',
+    events_number: 50,
+    level: 'error',
+    environment: 'homologacao',
+    source: 'supertest',
+  });
+
+  await Log.create({
+    title: 'Teste 4',
+    message: 'Log teste 4',
+    user_token: 'jkl',
+    events_number: 1,
+    level: 'critical_error',
+    environment: 'producao',
+    source: 'supertest',
+  });
+
+  await Log.create({
+    title: 'Teste 5',
+    message: 'Log teste 5',
+    user_token: 'mno',
+    events_number: 140,
+    level: 'warning',
+    environment: 'homologacao',
+    source: 'supertest',
+  });
 });
 
 afterEach(async () => {
@@ -56,6 +86,42 @@ afterEach(async () => {
 
 describe('The API on /logs Endpoints at GET method should...', () => {
   it('Return a list of objects', async () => {
+    expect.assertions(2);
+
+    const result = await request
+      .get('/logs')
+      .set('Authorization', `Bearer ${login}`);
+
+    expect(result.statusCode).toBe(200);
+
+    expect(result.body).toMatchObject({
+      meta: {
+        total: 5,
+      },
+      results: [
+        {
+          title: 'Teste',
+          message: 'Log teste',
+          user_token: 'AbC',
+          events_number: 100,
+          level: 'debug',
+          environment: 'dev',
+          source: 'supertest',
+        },
+        {
+          title: 'Teste 2',
+          message: 'Log teste 2',
+          user_token: 'def',
+          events_number: 200,
+          level: 'debug',
+          environment: 'dev',
+          source: 'supertest',
+        },
+      ],
+    });
+  });
+
+  it('Return a list of objects based on filters', async () => {
     expect.assertions(2);
 
     const result = await request
