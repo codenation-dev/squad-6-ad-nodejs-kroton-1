@@ -97,9 +97,9 @@ class LogController {
         const result = await Log.findByPk(id);
 
         if (result) {
-          res.send(200).json(result);
+          res.status(200).json(result);
         } else {
-          res.send(404).json({ message: 'Cannot find with id especified' });
+          res.status(404).json({ message: 'Cannot find with id especified' });
         }
       } else {
         res.status(400).json({ message: 'Id cannot be null' });
@@ -174,7 +174,7 @@ class LogController {
           }
         );
 
-        if (result) {
+        if (result[0]) {
           res.status(200).json({ message: 'Archived successfully' });
         } else {
           res.status(404).json({ message: 'Cannot archive, object not found' });

@@ -1,32 +1,31 @@
 import supertest from 'supertest';
 import app from '../src/app';
-import db from '../src/database';
 import Log from '../src/app/models/Log';
+import User from '../src/app/models/User';
 
 const request = supertest(app);
 
 let login = {};
 
 beforeAll(async () => {
-  await request()
-    .post('/users')
-    .send({
-      name: 'Tester',
-      email: 'tester@squad6.com.br',
-      password: '1234567',
-    });
+  await request.post('/users').send({
+    name: 'Tester',
+    email: 'tester@squad6.com.br',
+    password: '1234567',
+  });
 
-  login = await request()
-    .post('/login')
-    .send({
-      email: 'tester@squad6.com.br',
-      password: '1234567',
-    });
+  const objLogin = await request.post('/login').send({
+    email: 'tester@squad6.com.br',
+    password: '1234567',
+  });
+
+  if (objLogin) {
+    login = objLogin.body.token;
+  }
 });
 
 afterAll(async () => {
-  await db.sequelize.query('');
-  await db.sequelize.close();
+  User.destroy({ truncate: true });
 });
 
 beforeEach(async () => {
@@ -52,14 +51,16 @@ beforeEach(async () => {
 });
 
 afterEach(async () => {
-  await Log.destroy({});
+  await Log.destroy({ truncate: true });
 });
 
 describe('The API on /logs Endpoints at GET method should...', () => {
   it('Return a list of objects', async () => {
     expect.assertions(2);
 
-    const result = await request.get('/logs').set('Authorization', login.token);
+    const result = await request
+      .get('/logs')
+      .set('Authorization', `Bearer ${login}`);
 
     expect(result.statusCode).toBe(200);
 
@@ -93,27 +94,22 @@ describe('The API on /logs Endpoints at GET method should...', () => {
   it('Return a single object based on its id', async () => {
     expect.assertions(2);
 
+    const obj = (await Log.findOne({})).dataValues;
+
     const result = await request
-      .get('/logs/1')
-      .set('Authorization', login.token);
+      .get(`/logs/${obj.id}`)
+      .set('Authorization', `Bearer ${login}`);
 
     expect(result.statusCode).toBe(200);
 
     expect(result.body).toMatchObject({
-      meta: {
-        total: 1,
-      },
-      results: [
-        {
-          title: 'Teste',
-          message: 'Log teste',
-          user_token: 'AbC',
-          events_number: 100,
-          level: 'debug',
-          environment: 'dev',
-          source: 'supertest',
-        },
-      ],
+      title: 'Teste',
+      message: 'Log teste',
+      user_token: 'AbC',
+      events_number: 100,
+      level: 'debug',
+      environment: 'dev',
+      source: 'supertest',
     });
   });
 
@@ -121,8 +117,8 @@ describe('The API on /logs Endpoints at GET method should...', () => {
     expect.assertions(2);
 
     const result = await request
-      .get('/logs/5')
-      .set('Authorization', login.token);
+      .get('/logs/50000000')
+      .set('Authorization', `Bearer ${login}`);
 
     expect(result.statusCode).toBe(404);
 
@@ -136,7 +132,7 @@ describe('The API on /logs Endpoints at GET method should...', () => {
 
     const result = await request
       .get('/logs/null')
-      .set('Authorization', login.token);
+      .set('Authorization', `Bearer ${login}`);
 
     expect(result.statusCode).toBe(400);
 
@@ -148,9 +144,11 @@ describe('The API on /logs Endpoints at PUT method should...', () => {
   it('Archive an object successfully', async () => {
     expect.assertions(2);
 
+    const obj = (await Log.findOne({})).dataValues;
+
     const result = await request
-      .put('/logs/1')
-      .set('Authorization', login.token);
+      .put(`/logs/${obj.id}`)
+      .set('Authorization', `Bearer ${login}`);
 
     expect(result.statusCode).toBe(200);
 
@@ -161,8 +159,8 @@ describe('The API on /logs Endpoints at PUT method should...', () => {
     expect.assertions(2);
 
     const result = await request
-      .put('/logs/5')
-      .set('Authorization', login.token);
+      .put('/logs/500000')
+      .set('Authorization', `Bearer ${login}`);
 
     expect(result.statusCode).toBe(404);
 
@@ -176,7 +174,7 @@ describe('The API on /logs Endpoints at PUT method should...', () => {
 
     const result = await request
       .put('/logs/null')
-      .set('Authorization', login.token);
+      .set('Authorization', `Bearer ${login}`);
 
     expect(result.statusCode).toBe(400);
 
@@ -188,9 +186,11 @@ describe('The API on /logs Endpoints at DELETE method should...', () => {
   it('Delete an object successfully', async () => {
     expect.assertions(2);
 
+    const obj = (await Log.findOne({})).dataValues;
+
     const result = await request
-      .delete('/logs/1')
-      .set('Authorization', login.token);
+      .delete(`/logs/${obj.id}`)
+      .set('Authorization', `Bearer ${login}`);
 
     expect(result.statusCode).toBe(204);
 
@@ -201,8 +201,8 @@ describe('The API on /logs Endpoints at DELETE method should...', () => {
     expect.assertions(2);
 
     const result = await request
-      .put('/logs/5')
-      .set('Authorization', login.token);
+      .delete('/logs/500000')
+      .set('Authorization', `Bearer ${login}`);
 
     expect(result.statusCode).toBe(404);
 
@@ -216,7 +216,7 @@ describe('The API on /logs Endpoints at DELETE method should...', () => {
 
     const result = await request
       .put('/logs/null')
-      .set('Authorization', login.token);
+      .set('Authorization', `Bearer ${login}`);
 
     expect(result.statusCode).toBe(400);
 

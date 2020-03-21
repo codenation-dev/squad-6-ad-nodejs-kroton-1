@@ -7,7 +7,13 @@
     "dev": "nodemon src/server.js",
     "dev:debug": "nodemon --inpect src/server.js",
     "sync": "nodemon src/app/syncDB.js",
-    "test": "nodemon --exec jest ./test/logs.test.js"
+    "sync:test": "NODE_ENV=test nodemon src/app/syncDB.js",
+    "test": "nodemon --exec jest --coverage"
+  },
+  "jest": {
+    "transform": {
+      ".(js|jsx|ts|tsx)": "@sucrase/jest-plugin"
+    }
   },
   "repository": {
     "type": "git",
@@ -28,6 +34,7 @@
     "yup": "^0.28.1"
   },
   "devDependencies": {
+    "@sucrase/jest-plugin": "^2.0.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-config-prettier": "^6.10.0",
