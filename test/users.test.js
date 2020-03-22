@@ -94,7 +94,7 @@ describe('The API on /users Endpoint at POST method should...',  () => {
       .send({
         "name": "Vinicius Scudeler",
         "email": "vinicius@codenation.com",
-        "passsword": "123456"
+        "password": ""
       })
 
     expect(res.statusCode).toBe(500);
@@ -342,7 +342,8 @@ describe('The API on /login EndPoint at POST method shloud...', () => {
     const res = await request
     .post('/login')
     .send({
-      "email": "thiago@hotmail.com", 
+      "emaiil": "thiago@hotmail.com", 
+      "password": "123456"
     })
 
     expect(res.statusCode).toBe(500);
