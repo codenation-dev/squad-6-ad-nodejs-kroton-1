@@ -1,10 +1,10 @@
-import { Router } from 'express';
+const { Router } = require('express');
 
-import UserController from './app/controllers/UserController';
-import SessionController from './app/controllers/SessionController';
-import LogController from './app/controllers/LogController';
+const UserController = require('./app/controllers/UserController');
+const SessionController = require('./app/controllers/SessionController');
+const LogController = require('./app/controllers/LogController');
 
-import authMiddleware from './app/middlewares/auth';
+const authMiddleware = require('./app/middlewares/auth');
 
 const routes = new Router();
 
@@ -19,6 +19,8 @@ routes.get('/users/:id', UserController.show);
 routes.put('/users/:id', UserController.update);
 routes.delete('/users/:id', UserController.delete);
 
+routes.post('/logs', LogController.saveLog);
+
 routes.get('/logs', LogController.searchLog);
 
 routes.get('/logs/:id', LogController.getLogById);
@@ -27,4 +29,4 @@ routes.delete('/logs/:id', LogController.remove);
 
 routes.put('/logs/:id', LogController.toArchive);
 
-export default routes;
+module.exports = routes;

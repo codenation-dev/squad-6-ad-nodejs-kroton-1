@@ -1,5 +1,5 @@
-import { Op } from 'sequelize';
-import Log from '../models/Log';
+const { Op } = require('sequelize');
+const Log = require('../models/Log');
 
 const buildSearch = async req => {
   const environment = req.query.env;
@@ -89,6 +89,31 @@ const buildMeta = async (req, limit, offset, total) => {
 };
 
 class LogController {
+  async saveLog(req, res) {
+    try {
+      const log = req.body;
+      const token = req.headers.authorization.split(' ')[1];
+      log.user_token = token;
+
+      const result = await Log.create(log);
+
+      res.status(201).json(result);
+    } catch (error) {
+      if (error.name === 'SequelizeValidationError') {
+        const fields = error.errors.map(err => {
+          return {
+            message: err.message,
+            field: err.path,
+            wrongValue: err.value,
+            validation: err.validatorName,
+          };
+        });
+        res.status(400).json({ error: 'Validation Errors', fields });
+      }
+      res.status(400).json(error);
+    }
+  }
+
   async getLogById(req, res) {
     try {
       const { id } = req.params;
@@ -191,4 +216,4 @@ class LogController {
   }
 }
 
-export default new LogController();
+module.exports = new LogController();

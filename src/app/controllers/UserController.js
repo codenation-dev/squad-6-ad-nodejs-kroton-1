@@ -1,7 +1,7 @@
-import jwt from 'jsonwebtoken';
+const jwt = require('jsonwebtoken');
 
-import UserModel from '../models/User';
-import authConfig from '../../config/auth';
+const UserModel = require('../models/User');
+const authConfig = require('../../config/auth');
 
 class UserController {
   async store(req, res) {
@@ -21,7 +21,7 @@ class UserController {
     } catch (error) {
       return res.status(500).json({
         message: 'Creating user operation failed',
-        error: error,
+        error,
       });
     }
   }
@@ -37,7 +37,7 @@ class UserController {
     } catch (error) {
       return res.status(500).json({
         message: 'Geting user operation failed',
-        error: error,
+        error,
       });
     }
   }
@@ -58,7 +58,7 @@ class UserController {
     } catch (error) {
       return res.status(500).json({
         message: 'Updating user operation failed',
-        error: error,
+        error,
       });
     }
   }
@@ -75,7 +75,7 @@ class UserController {
     } catch (error) {
       return res.status(500).json({
         message: 'Deleting user operation failed',
-        error: error,
+        error,
       });
     }
   }
@@ -110,10 +110,10 @@ class UserController {
     } catch (error) {
       return res.status(500).json({
         message: 'Login operation failed',
-        error: error,
+        error,
       });
     }
   }
 }
 
-export default new UserController();
+module.exports = new UserController();
