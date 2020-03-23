@@ -1,7 +1,6 @@
-import supertest from 'supertest';
-import app from '../src/app';
-import UserModel from '../src/app/models/User';
-
+const supertest = require('supertest');
+const app = require('../src/app');
+const UserModel =  require('../src/app/models/User');
 const request = supertest(app);
 
 beforeAll(async () => {
