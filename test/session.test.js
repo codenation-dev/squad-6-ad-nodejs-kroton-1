@@ -1,6 +1,6 @@
 const supertest = require('supertest');
 const app = require('../src/app');
-const UserModel =  require('../src/app/models/User');
+const UserModel = require('../src/app/models/User');
 const request = supertest(app);
 
 beforeAll(async () => {
