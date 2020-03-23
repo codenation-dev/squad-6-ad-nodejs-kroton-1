@@ -9,11 +9,6 @@
     "sync": "nodemon src/app/syncDB.js",
     "test": "nodemon --exec 'jest --coverage || true'"
   },
-  "jest": {
-    "transform": {
-      ".(js|jsx|ts|tsx)": "@sucrase/jest-plugin"
-    }
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/codenation-dev/squad-6-ad-nodejs-kroton-1.git"
