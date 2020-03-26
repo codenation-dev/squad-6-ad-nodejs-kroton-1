@@ -9,8 +9,8 @@
     "sync": "nodemon src/app/syncDB.js",
     "sync:dev": "DB=localhost nodemon src/app/syncDB.js",
     "sync:test": "NODE_ENV=test DB=localhost nodemon src/app/syncDB.js",
-    "test": "DB=localhost nodemon --exec jest",
-    "test:coverage": "DB=localhost nodemon --exec jest --coverage"
+    "test": "DB=localhost jest",
+    "test:coverage": "DB=localhost jest --coverage"
   },
   "repository": {
     "type": "git",
@@ -31,7 +31,6 @@
     "yup": "^0.28.1"
   },
   "devDependencies": {
-    "@sucrase/jest-plugin": "^2.0.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-config-prettier": "^6.10.0",
@@ -40,7 +39,6 @@
     "nodemon": "^2.0.2",
     "prettier": "^1.19.1",
     "sequelize-cli": "^5.5.1",
-    "sucrase": "^3.12.1",
     "supertest": "^4.0.2"
   }
 }
