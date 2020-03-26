@@ -3,3 +3,6 @@ node_modules
 
 #Ignore env files
 .env
+
+#Ignore coverage result files
+coverage
