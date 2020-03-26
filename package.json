@@ -7,7 +7,10 @@
     "dev": "nodemon src/server.js",
     "dev:debug": "nodemon --inpect src/server.js",
     "sync": "nodemon src/app/syncDB.js",
-    "test": "nodemon --exec 'jest --coverage || true'"
+    "sync:dev": "DB=localhost nodemon src/app/syncDB.js",
+    "sync:test": "NODE_ENV=test DB=localhost nodemon src/app/syncDB.js",
+    "test": "DB=localhost jest",
+    "test:coverage": "DB=localhost jest --coverage"
   },
   "repository": {
     "type": "git",
@@ -38,7 +41,6 @@
     "nodemon": "^2.0.2",
     "prettier": "^1.19.1",
     "sequelize-cli": "^5.5.1",
-    "sucrase": "^3.12.1",
     "supertest": "^4.0.2"
   }
 }
