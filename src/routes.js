@@ -1,4 +1,6 @@
 const { Router } = require('express');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDoc = require('./swagger.json');
 
 const UserController = require('./app/controllers/UserController');
 const SessionController = require('./app/controllers/SessionController');
@@ -7,6 +9,9 @@ const LogController = require('./app/controllers/LogController');
 const authMiddleware = require('./app/middlewares/auth');
 
 const routes = new Router();
+
+routes.use('/api-docs', swaggerUi.serve);
+routes.use('/api-docs', swaggerUi.setup(swaggerDoc));
 
 routes.post('/login', UserController.login);
 routes.post('/users', UserController.store);
