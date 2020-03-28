@@ -7,14 +7,14 @@ class User extends Model {
     super.init(
       {
         name: {
-         type: Sequelize.STRING,
-         allowNull: false,
-         validate: {
-           notEmpty: true,
-           notNull: true,
-         },
-        },  
-        email: { 
+          type: Sequelize.STRING,
+          allowNull: false,
+          validate: {
+            notEmpty: true,
+            notNull: true,
+          },
+        },
+        email: {
           type: Sequelize.STRING,
           allowNull: false,
           validate: {
@@ -29,7 +29,7 @@ class User extends Model {
             notEmpty: true,
             notNull: true,
           },
-        },  
+        },
         password_hash: Sequelize.STRING,
       },
       {
