@@ -1,6 +1,8 @@
 const { Op } = require('sequelize');
 
 const buildSearch = async req => {
+  console.log({ query: req.query });
+
   const environment = req.query.env;
   const { sortBy } = req.query;
   const sortOrder = req.query.sortOrder || 'DESC';
@@ -40,9 +42,6 @@ const buildSearch = async req => {
       countOptions.where = { level: queryValue };
     }
   }
-
-  options.where = { toArchive: 'false' };
-  countOptions.where = { toArchive: 'false' };
 
   options.offset = +offset;
   options.limit = +limit;
