@@ -2,30 +2,25 @@ const supertest = require('supertest');
 const app = require('../src/app');
 const Log = require('../src/app/models/Log');
 const User = require('../src/app/models/User');
+const db = require('../src/database/index');
 
 const request = supertest(app);
 
-let login = {};
+let login = '';
 
 beforeAll(async () => {
-  await request.post('/users').send({
-    name: 'Tester',
-    email: 'tester@squad6.com.br',
-    password: '1234567',
-  });
-
-  const objLogin = await request.post('/login').send({
-    email: 'tester@squad6.com.br',
-    password: '1234567',
-  });
-
-  if (objLogin) {
-    login = objLogin.body.token;
-  }
+  login = (
+    await request.post('/users').send({
+      name: 'Tester',
+      email: 'tester@squad6.com.br',
+      password: '1234567',
+    })
+  ).body.token;
 });
 
 afterAll(async () => {
-  User.destroy({ truncate: true });
+  await User.destroy({ truncate: true });
+  await db.close();
 });
 
 beforeEach(async () => {
