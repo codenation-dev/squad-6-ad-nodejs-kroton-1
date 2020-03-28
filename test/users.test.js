@@ -5,18 +5,18 @@ const db = require('../src/database/index');
 
 const request = supertest(app);
 
-let login = {};
+let login;
 
 beforeAll(async () => {
   const objLogin = await request.post('/users').send({
-    name: 'Vinicius',
-    email: 'vinicius@codenation.com',
-    password: '1234567',
+    name: 'Talison',
+    email: 'talison@codenation.com',
+    password: '123456',
   });
 
   if (objLogin) {
     login = objLogin.body.token;
-  };
+  }
 });
 
 afterAll(async () => {
@@ -50,7 +50,7 @@ describe('The API on /users Endpoint at POST method should...', () => {
 
     expect(res.statusCode).toBe(400);
     expect(res.body).toMatchObject({
-      "error": "User already exists",
+      error: 'User already exists',
     });
   });
 
@@ -64,7 +64,12 @@ describe('The API on /users Endpoint at POST method should...', () => {
     });
 
     expect(res.statusCode).toBe(200);
-    expect(Object.keys(res.body)).toMatchObject(['id','name','email','token']);
+    expect(Object.keys(res.body)).toMatchObject([
+      'id',
+      'name',
+      'email',
+      'token',
+    ]);
 
     const found = await UserModel.findOne({
       where: { email: 'adriano@codenation.com.br' },
@@ -84,7 +89,7 @@ describe('The API on /users Endpoint at POST method should...', () => {
 
     expect(res.statusCode).toBe(400);
     expect(res.body).toMatchObject({
-      error: 'Validation fails'
+      error: 'Validation fails',
     });
   });
 });
@@ -94,19 +99,19 @@ describe('The API on /users/UserID Endpoint at GET method should...', () => {
 
   beforeEach(async () => {
     await UserModel.create({
-      name: 'Vinicius Ricci',
-      email: 'viniciussricci@hotmail.com',
+      name: 'Talison Maturana',
+      email: 'talison@hotmail.com',
       password: '123456',
     });
 
     user = await UserModel.findOne({
-      where: { email: 'viniciussricci@hotmail.com' },
+      where: { email: 'talison@hotmail.com' },
     });
   });
 
   afterEach(async () => {
     await UserModel.destroy({
-      where: { email: 'viniciussricci@hotmail.com' },
+      where: { email: 'talison@hotmail.com' },
     });
   });
 
@@ -138,19 +143,19 @@ describe('The API on /users/UserID Endpoint at DELETE method should...', () => {
 
   beforeEach(async () => {
     await UserModel.create({
-      name: 'Vinicius Ricci',
-      email: 'viniciussricci@hotmail.com',
+      name: 'Talison Maturana',
+      email: 'talison@hotmail.com',
       password: '123456',
     });
 
     user = await UserModel.findOne({
-      where: { email: 'viniciussricci@hotmail.com' },
+      where: { email: 'talison@hotmail.com' },
     });
   });
 
   afterEach(async () => {
     await UserModel.destroy({
-      where: { email: 'viniciussricci@hotmail.com' },
+      where: { email: 'talison@hotmail.com' },
     });
   });
 
@@ -180,18 +185,17 @@ describe('The API on /users/UserID Endpoint at DELETE method should...', () => {
 });
 
 describe('The API on /users EndPoint at PUT method should...', () => {
-
   beforeEach(async () => {
     await UserModel.create({
-      name: 'Vinicius Ricci',
-      email: 'viniciussricci@hotmail.com',
-      password: '123456'
+      name: 'Talison Maturana',
+      email: 'talison@hotmail.com',
+      password: '123456',
     });
   });
 
   afterEach(async () => {
     await UserModel.destroy({
-      where: { email: 'viniciussricci@hotmail.com' },
+      where: { email: 'talison@hotmail.com' },
     });
   });
 
@@ -202,14 +206,14 @@ describe('The API on /users EndPoint at PUT method should...', () => {
       .put('/users')
       .set('Authorization', `Bearer ${login}`)
       .send({
-        email: 'vinicius@codenation.com',
-        oldPassword: '1234567',
+        email: 'talison@codenation.com',
+        oldPassword: '123456',
         password: '',
       });
 
     expect(res.statusCode).toBe(400);
     expect(res.body).toMatchObject({
-      error: 'Validation fails'
+      error: 'Validation fails',
     });
   });
 
@@ -220,14 +224,14 @@ describe('The API on /users EndPoint at PUT method should...', () => {
       .put('/users')
       .set('Authorization', `Bearer ${login}`)
       .send({
-        email: 'viniciussricci@hotmail.com',
-        oldPassword: '1234567',
+        email: 'talison@hotmail.com',
+        oldPassword: '123456',
         password: '123456789',
       });
 
     expect(res.statusCode).toBe(400);
     expect(res.body).toMatchObject({
-      error: 'User already exists'
+      error: 'User already exists',
     });
   });
 
@@ -238,14 +242,14 @@ describe('The API on /users EndPoint at PUT method should...', () => {
       .put('/users')
       .set('Authorization', `Bearer ${login}`)
       .send({
-        email: 'vinicius@codenation.com',
+        email: 'talison@codenation.com',
         oldPassword: '3321321',
         password: '12345789',
       });
 
     expect(res.statusCode).toBe(401);
     expect(res.body).toMatchObject({
-      error: 'Password does not match'
+      error: 'Password does not match',
     });
   });
 
@@ -256,19 +260,18 @@ describe('The API on /users EndPoint at PUT method should...', () => {
       .put(`/users`)
       .set('authorization', `Bearer ${login}`)
       .send({
-        email: 'vinicius@hotmail.com',
-        oldPassword: '1234567',
-        password: '123456789'
+        email: 'talisond@codenation.com',
+        oldPassword: '123456',
+        password: '123456789',
       });
 
     expect(res.statusCode).toBe(200);
-    expect(Object.keys(res.body)).toMatchObject(['id','name','email']);
+    expect(Object.keys(res.body)).toMatchObject(['id', 'name', 'email']);
 
     const found = await UserModel.findOne({
-      where: { email: 'vinicius@hotmail.com' },
+      where: { email: 'talisond@codenation.com' },
     });
 
     expect(found).toBeTruthy();
   });
 });
-

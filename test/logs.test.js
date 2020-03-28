@@ -2,6 +2,7 @@ const supertest = require('supertest');
 const app = require('../src/app');
 const Log = require('../src/app/models/Log');
 const User = require('../src/app/models/User');
+const db = require('../src/database/index');
 
 const request = supertest(app);
 
@@ -20,7 +21,8 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  User.destroy({ truncate: true });
+  await User.destroy({ truncate: true });
+  await db.close();
 });
 
 beforeEach(async () => {
