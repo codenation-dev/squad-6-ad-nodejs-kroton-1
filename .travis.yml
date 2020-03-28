@@ -9,7 +9,7 @@ services:
 - postgresql
 
 before_script:
-- cp ./src/config/database.yml.travis config/database.yml
+- cp ./src/config/database.yml.travis /config/database.yml
 - psql -c 'create database log_api_test;' -U root
 - npm run sync:test
 
