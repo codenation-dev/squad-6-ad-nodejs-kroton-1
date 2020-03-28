@@ -41,6 +41,9 @@ const buildSearch = async req => {
     }
   }
 
+  options.where = { toArchive: 'false' };
+  countOptions.where = { toArchive: 'false' };
+
   options.offset = +offset;
   options.limit = +limit;
 
