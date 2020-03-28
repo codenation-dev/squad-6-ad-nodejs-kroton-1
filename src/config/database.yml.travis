@@ -1,0 +1,5 @@
+test:
+  adapter: postgresql
+  database: log_api_test
+  username: root
+  password: 123456789
