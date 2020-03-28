@@ -35,7 +35,6 @@ Execute the following command: **npm run sync:dev**
 
 * /api-docs - Access through the web browser and see the documentation (`Swagger`).
 * /users - `POST`: Create User
-* /login - `POST`: Login for Third Party APIs.
 * /session - `POST` : Login for web users.
 
 #### Routes that require authentication (Bearer Token)
