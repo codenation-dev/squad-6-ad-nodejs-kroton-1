@@ -1,36 +1,50 @@
 const jwt = require('jsonwebtoken');
 
+const Yup = require('yup');
 const UserModel = require('../models/User');
 const authConfig = require('../../config/auth');
 
 class UserController {
   async store(req, res) {
-    try {
-      const { name, email, password } = req.body;
+    const schema = Yup.object().shape({
+      name: Yup.string().required(),
+      email: Yup.string().required(),
+      password: Yup.string()
+        .required()
+        .min(6),
+    });
 
-      // Check if this user already exists
-      const found = await UserModel.findOne({
-        where: { email }
-      });
-      if (found)
-        return res.status(400).json({ message: 'This user already exists' });
-
-      await UserModel.create({ name, email, password });
-      
-      return res.status(201).json({ message: 'User created sucessfully' });
-    } catch (error) {
-      return res.status(500).json({
-        message: 'Creating user operation failed',
-        error,
-      });
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({ error: 'Validation fails' });
     }
+
+    const user = await UserModel.findOne({
+      where: { email: req.body.email },
+    });
+
+    if (user) {
+      return res.status(400).json({ error: 'User already exists' });
+    }
+
+    const { id, name, email } = await UserModel.create(req.body);
+
+    const token = await jwt.sign(
+      {
+        id,
+        email,
+        name,
+      },
+      authConfig.secret
+    );
+
+    return res.json({ id, name, email, token });
   }
 
   async show(req, res) {
     try {
       const { id } = req.params;
       const user = await UserModel.findOne({
-          where: { id }
+        where: { id },
       });
 
       return res.status(200).json({ user });
@@ -43,24 +57,42 @@ class UserController {
   }
 
   async update(req, res) {
-    try {
-      const { id } = req.params;
-      const { name, email, password } = req.body;
+    const schema = Yup.object().shape({
+      name: Yup.string(),
+      email: Yup.string(),
+      oldPassword: Yup.string().min(6),
+      password: Yup.string()
+        .min(6)
+        .when('oldPassword', (password, field) =>
+          password ? field.required().oneOf([Yup.ref('password')]) : field
+        ),
+    });
 
-      await UserModel.update(
-        { name, email, password },
-        {
-          where: { id },
-        }
-      );
-
-      return res.status(200).json({ message: 'User updated sucessfully' });
-    } catch (error) {
-      return res.status(500).json({
-        message: 'Updating user operation failed',
-        error,
-      });
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({ error: 'Validation fails' });
     }
+
+    const { email, oldPassword } = req.body;
+
+    const user = await UserModel.findByPk(req.userId);
+
+    if (email !== user.email) {
+      const userExists = await UserModel.findOne({
+        where: { email },
+      });
+
+      if (userExists) {
+        return res.status(400).json({ error: 'User already exists' });
+      }
+    }
+
+    if (oldPassword && !(await user.checkPassword(oldPassword))) {
+      return res.status(401).json({ error: 'Password does not match' });
+    }
+
+    const { id, name } = await user.update(req.body);
+
+    return res.json({ id, name, email });
   }
 
   async delete(req, res) {
@@ -75,41 +107,6 @@ class UserController {
     } catch (error) {
       return res.status(500).json({
         message: 'Deleting user operation failed',
-        error,
-      });
-    }
-  }
-
-  async login(req, res) {
-    try {
-      const { email, password } = req.body;
-
-      const user = await UserModel.findOne({
-        where: { email },
-      });
-      if (!user)
-        return res.status(401).json({ message: 'User does not exists' });
-
-      if (!(await user.checkPassword(password))) {
-        return res.status(401).json({ message: 'Authentication failed' });
-      }
-
-      const token = await jwt.sign(
-        {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-        },
-        authConfig.secret,
-        {
-          expiresIn: authConfig.expiresIn,
-        }
-      );
-
-      return res.status(200).json({ message: 'Sucessfull login', token });
-    } catch (error) {
-      return res.status(500).json({
-        message: 'Login operation failed',
         error,
       });
     }

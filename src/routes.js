@@ -13,7 +13,6 @@ const routes = new Router();
 routes.use('/api-docs', swaggerUi.serve);
 routes.use('/api-docs', swaggerUi.setup(swaggerDoc));
 
-routes.post('/login', UserController.login);
 routes.post('/users', UserController.store);
 routes.post('/session', SessionController.store);
 
@@ -21,7 +20,7 @@ routes.post('/session', SessionController.store);
 routes.use(authMiddleware);
 
 routes.get('/users/:id', UserController.show);
-routes.put('/users/:id', UserController.update);
+routes.put('/users', UserController.update);
 routes.delete('/users/:id', UserController.delete);
 
 routes.post('/logs', LogController.saveLog);
