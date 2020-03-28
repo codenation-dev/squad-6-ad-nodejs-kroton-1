@@ -1,8 +1,6 @@
 const { Op } = require('sequelize');
 
 const buildSearch = async req => {
-  console.log({ query: req.query });
-
   const environment = req.query.env;
   const { sortBy } = req.query;
   const sortOrder = req.query.sortOrder || 'DESC';
