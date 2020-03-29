@@ -1,6 +1,7 @@
 const supertest = require('supertest');
 const app = require('../src/app');
 const UserModel = require('../src/app/models/User');
+const db = require('../src/database/index');
 
 const request = supertest(app);
 
@@ -10,9 +11,10 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await UserModel.destroy({ truncate: true });
+  await db.close();
 });
 
-describe('The API on /session EndPoint at POST method shloud...', () => {
+describe('The API on /session EndPoint at POST method should...', () => {
   beforeEach(async () => {
     await UserModel.create({
       name: 'Vinicius Ricci',

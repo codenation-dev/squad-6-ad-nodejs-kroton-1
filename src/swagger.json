@@ -298,123 +298,6 @@
             "description": "Creating user operation failed"
           }
         }
-      }
-    },
-    "/session": {
-      "post": {
-        "tags": [
-          "User"
-        ],
-        "summary": "Login user",
-        "operationId": "sessionLogin",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "userInfo",
-            "in": "body",
-            "schema": {
-              "$ref": "#/definitions/LoginObject"
-            },
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful login",
-            "schema": {
-              "$ref": "#/definitions/UserSession"
-            }
-          },
-          "400": {
-            "description": "Validation fails"
-          },
-          "401": {
-            "description": "User or Password does not match"
-          }
-        }
-      }
-    },
-    "/login": {
-      "post": {
-        "tags": [
-          "User"
-        ],
-        "summary": "Login user reserved for third party APIs",
-        "operationId": "login",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "userInfo",
-            "in": "body",
-            "schema": {
-              "$ref": "#/definitions/LoginObject"
-            },
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful login",
-            "schema": {
-              "$ref": "#/definitions/LoginSuccessful"
-            }
-          },
-          "401": {
-            "description": "User or Password does not match"
-          },
-          "500": {
-            "description": "Login operation failed"
-          }
-        }
-      }
-    },
-    "/users/{id}": {
-      "get": {
-        "tags": [
-          "User"
-        ],
-        "summary": "Get user by id",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "type": "integer",
-            "required": true,
-            "description": "id from the user"
-          }
-        ],
-        "security": [
-          {
-            "Bearer": []
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "500": {
-            "description": "Geting user operation failed"
-          }
-        }
       },
       "put": {
         "tags": [
@@ -457,6 +340,84 @@
           },
           "500": {
             "description": "Updating user operation failed"
+          }
+        }
+      }
+    },
+    "/session": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Login user",
+        "operationId": "sessionLogin",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "userInfo",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/LoginObject"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful login",
+            "schema": {
+              "$ref": "#/definitions/UserSession"
+            }
+          },
+          "400": {
+            "description": "Validation fails"
+          },
+          "401": {
+            "description": "User or Password does not match"
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get user by id",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "required": true,
+            "description": "id from the user"
+          }
+        ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Geting user operation failed"
           }
         }
       },
@@ -601,17 +562,6 @@
           "type": "string"
         },
         "password": {
-          "type": "string"
-        }
-      }
-    },
-    "LoginSuccessful": {
-      "type": "object",
-      "properties": {
-        "message": {
-          "type": "string"
-        },
-        "token": {
           "type": "string"
         }
       }

@@ -10,6 +10,7 @@ services:
 
 before_script:
 - psql -c "CREATE DATABASE log_api_test;" -U postgres
+- psql -c "CREATE USER root WITH PASSWORD '123456789';" -U postgres
 - npm run sync:test
 
 env:
