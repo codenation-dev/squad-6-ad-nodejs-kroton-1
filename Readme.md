@@ -40,7 +40,7 @@ Execute the following command: **npm run sync:dev**
 #### Routes that require authentication (Bearer Token)
 
 * /users/{id} - `GET`: Get info about a user.
-* /users/{id} -`PUT`: Update a user.
+* /users      -`PUT`: Update a user.
 * /users/{id} - `DELETE`: Remove a user.
 
 * /logs - `POST` : Save a log.
