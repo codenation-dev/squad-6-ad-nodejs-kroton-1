@@ -9,13 +9,15 @@ const request = supertest(app);
 let login = '';
 
 beforeAll(async () => {
-  login = (
-    await request.post('/users').send({
-      name: 'Tester',
-      email: 'tester@squad6.com.br',
-      password: '1234567',
-    })
-  ).body.token;
+  const objLogin = await request.post('/users').send({
+    name: 'Tester',
+    email: 'tester@squad6.com.br',
+    password: '1234567',
+  });
+
+  if (objLogin) {
+    login = objLogin.body.token;
+  }
 });
 
 afterAll(async () => {
