@@ -4,7 +4,7 @@
   "description": "This repository will have the code of our final project from AceleraDev Nodejs - Kroton.",
   "main": "index.js",
   "engines": {
-    "node": "12.10"
+    "node": "12.10.x"
   },
   "scripts": {
     "dev": "nodemon src/server.js",
