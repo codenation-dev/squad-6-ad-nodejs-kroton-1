@@ -6,7 +6,7 @@ const db = require('../src/database/index');
 
 const request = supertest(app);
 
-let login = {};
+let login = '';
 
 beforeAll(async () => {
   const objLogin = await request.post('/users').send({
