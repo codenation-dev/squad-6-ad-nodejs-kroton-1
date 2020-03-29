@@ -9,7 +9,7 @@
     "sync": "node src/app/syncDB.js",
     "sync:dev": "DB=localhost node src/app/syncDB.js",
     "sync:test": "NODE_ENV=test DB=localhost node src/app/syncDB.js",
-    "test": "DB=localhost jest",
+    "test": "DB=localhost jest --runInBand",
     "test:coverage": "DB=localhost jest --coverage"
   },
   "repository": {
