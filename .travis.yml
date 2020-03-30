@@ -18,7 +18,10 @@ env:
     - PGUSER=root
     - PGPASSWORD=123456789
 
-deploy:
-  provider: heroku
-  on:
-    branch: feature/test-ci
+# deploy:
+#   provider: heroku
+#   api-key:
+#     secure: $HEROKU_API_KEY
+#   app: squad6
+#   on:
+#     branch: develop
