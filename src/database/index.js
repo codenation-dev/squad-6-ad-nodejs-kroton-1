@@ -12,11 +12,11 @@ let connection;
 if (DATABASE_URL.includes('postgres://')) {
   const options = parser(DATABASE_URL);
 
-  connection = new Sequelize({ ...options, dialect: 'postgres' });
+  connection = new Sequelize({ config: options, dialect: 'postgres' });
 } else {
   connection = new Sequelize(config);
 }
-console.log({ connection });
+console.log({ connection: connection.config });
 User.init(connection);
 Log.init(connection);
 
