@@ -5,10 +5,10 @@ services:
     image: node:12.10.0-alpine
     container_name: log_api_server
     ports:
-      - "3000:3000"
+      - '3000:3000'
     volumes:
-      - ".:/usr/app"
-      - "/usr/app/node_modules"
+      - '.:/usr/app'
+      - '/usr/app/node_modules'
     links:
       - database
     command: sh -c "cd /usr/app/ && npm i && npm run dev"
@@ -17,7 +17,7 @@ services:
     image: postgres
     container_name: log_api_db
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       - /usr/postgres/data
     environment:
