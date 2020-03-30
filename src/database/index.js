@@ -11,8 +11,9 @@ let connection;
 
 if (DATABASE_URL.includes('postgres://')) {
   const options = parser(DATABASE_URL);
+  console.log({ options });
 
-  connection = new Sequelize({ config: options, dialect: 'postgres' });
+  connection = new Sequelize({ ...options, dialect: 'postgres' });
 } else {
   connection = new Sequelize(config);
 }
