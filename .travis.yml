@@ -1,0 +1,27 @@
+language: node_js
+node_js:
+- '12.10'
+
+install:
+- npm i
+
+services:
+- postgresql
+
+before_script:
+- psql -c "CREATE DATABASE log_api_test;" -U postgres
+- psql -c "CREATE USER root WITH PASSWORD '123456789';" -U postgres
+- npm run sync:test
+
+env:
+  global:
+    - PGUSER=root
+    - PGPASSWORD=123456789
+
+# deploy:
+#   provider: heroku
+#   api-key:
+#     secure: $HEROKU_API_KEY
+#   app: squad6
+#   on:
+#     branch: develop
