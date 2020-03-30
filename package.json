@@ -10,10 +10,10 @@
     "dev": "nodemon src/server.js",
     "dev:debug": "nodemon --inpect src/server.js",
     "sync": "node src/app/syncDB.js",
-    "sync:dev": "DB=localhost node src/app/syncDB.js",
-    "sync:test": "NODE_ENV=test DB=localhost node src/app/syncDB.js",
-    "test": "DB=localhost jest --runInBand",
-    "test:coverage": "DB=localhost jest --coverage --runInBand"
+    "sync:dev": "DATABASE_URL=localhost node src/app/syncDB.js",
+    "sync:test": "NODE_ENV=test DATABASE_URL=localhost node src/app/syncDB.js",
+    "test": "DATABASE_URL=localhost jest --runInBand",
+    "test:coverage": "DATABASE_URL=localhost jest --coverage --runInBand"
   },
   "repository": {
     "type": "git",

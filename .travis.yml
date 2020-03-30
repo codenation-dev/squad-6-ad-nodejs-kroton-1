@@ -20,5 +20,6 @@ env:
 
 deploy:
   provider: heroku
-  on:
-    branch: feature/test-ci
+  api-key:
+    secure: $HEROKU_API_KEY
+  app: squad6
