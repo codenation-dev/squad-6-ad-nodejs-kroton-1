@@ -17,13 +17,11 @@ if (DATABASE_URL.includes('postgres://')) {
   obj.password = options.password;
   obj.database = options.database;
 
-  console.log({ options, obj });
-
   connection = new Sequelize({ ...obj, dialect: 'postgres' });
 } else {
   connection = new Sequelize(config);
 }
-console.log({ connection: connection.config });
+
 User.init(connection);
 Log.init(connection);
 
