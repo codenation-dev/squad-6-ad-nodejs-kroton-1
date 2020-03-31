@@ -11,7 +11,13 @@ let connection;
 
 if (DATABASE_URL.includes('postgres://')) {
   const options = parser(DATABASE_URL);
-  console.log({ options });
+  const obj = {};
+  obj.host = options.host;
+  obj.username = options.user;
+  obj.password = options.password;
+  obj.database = options.database;
+
+  console.log({ options, obj });
 
   connection = new Sequelize({ ...options, dialect: 'postgres' });
 } else {
