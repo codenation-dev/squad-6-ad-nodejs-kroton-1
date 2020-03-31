@@ -19,7 +19,7 @@ if (DATABASE_URL.includes('postgres://')) {
 
   console.log({ options, obj });
 
-  connection = new Sequelize({ ...options, dialect: 'postgres' });
+  connection = new Sequelize({ ...obj, dialect: 'postgres' });
 } else {
   connection = new Sequelize(config);
 }
